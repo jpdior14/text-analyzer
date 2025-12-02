@@ -1,7 +1,9 @@
-#include "analyzer.h"
+#include "analyzer/stats.hpp"
 #include <fstream>
 #include <sstream>
 #include <iostream>
+
+namespace analyzer {
 
 TextStats analyze_file(const std::string& filename) {
 	std::ifstream file(filename);
@@ -26,4 +28,6 @@ TextStats analyze_file(const std::string& filename) {
 		}
 	}
 	return result;
+}
+
 }

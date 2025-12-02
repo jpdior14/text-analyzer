@@ -1,23 +1,41 @@
-# Compiler and Flags
+# Compiler and flags
 CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++17
 
-# Project Files
-TARGET = analyzer
-SRCS = main.cpp analyzer.cpp
-OBJS = $(SRCS:.cpp=.o)
+# Include path
+CPPFLAGS = -Iinclude 
 
-# Default Rule: Build the final target
+# Linker flags
+LDFLAGS = 
+
+# Directories
+SRCDIR = src
+OBJDIR = obj
+
+# Target executable
+TARGET = analyzer
+
+# Find all .cpp files in the source directory
+SRCS = $(wildcard $(SRCDIR)/*.cpp)
+
+# Generate object file names, placing them in the OBJDIR
+OBJS = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
+
+# Default 'all' rule
 all: $(TARGET)
 
-# Linking Rule: Combine object files into the final executable
+# Linking rule
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	@echo "LD   ==> $@"
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
-# Compilation Rule: Compile a .cpp file into a .o file
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Compilation rule (for objects in OBJDIR from SRCDIR)
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(@D)
+	@echo "CXX  ==> $@"
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
-# Clean Rule: Remove all generated artifacts
+# Clean rule
 clean:
-	rm -f $(OBJS) $(TARGET)
+	@echo "CLEAN==> Removing build artifacts"
+	rm -rf $(OBJDIR) $(TARGET)

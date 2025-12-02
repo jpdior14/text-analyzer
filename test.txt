@@ -1,2 +1,2 @@
-hello world
-next line
+Hello brutal world
+Line two.
